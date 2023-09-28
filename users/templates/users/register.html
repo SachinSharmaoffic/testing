@@ -1,0 +1,165 @@
+{% extends "base.html" %} {% block content %} {% load crispy_forms_tags %}
+
+	
+<header id="header" class="fixed-header
+" style="
+position: fixed;
+top: 50px;
+width: 100%;
+background-color: #2f3239; /* Set the background color as needed */
+z-index: 1000; /* Ensure the header is above other elements */
+ /* Add smooth transition effect */
+">
+<section class="container clearfix">
+  <div class="logo"><a href="{% url "base:home"%}"><img alt="" src="/static/images/logo2.png"></a></div>
+  <nav class="navigation">
+    <ul>
+      <li><a href="{% url "base:home"%}">Home</a>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index_2.html">Home 2</a></li>
+          <li><a href="index_boxed_1.html">Home Boxed 1</a></li>
+          <li><a href="index_boxed_2.html">Home Boxed 2</a></li>
+          <li><a href="index_no_box.html">Home No Box</a></li>
+        </ul>
+      </li>
+      {% if user.is_authenticated %}
+
+        <li class="ask_question "><a href="{% url 'base:question_create' %}">Ask Question</a></li>
+      {% else %}
+        <li class="ask_question"><a href="{% url 'login' %}">Ask Question</a></li>
+      
+      {% endif %}
+      
+      <li class="current_page_item"><a href="cat_question.html">Questions</a>
+        <ul>
+          <li><a href="cat_question.html">Questions Category</a></li>
+          <li><a href="single_question.html">Question Single</a></li>
+          
+        </ul>
+      </li>
+      <li><a href="user_profile.html">User</a>
+        <ul>
+          <li><a href="user_profile.html">User Profile</a></li>
+          <li><a href="user_questions.html">User Questions</a></li>
+          <li><a href="user_answers.html">User Answers</a></li>
+          <li><a href="user_favorite_questions.html">User Favorite Questions</a></li>
+          <li><a href="user_points.html">User Points</a></li>
+          <li><a href="edit_profile.html">Edit Profile</a></li>
+        </ul>
+      </li>
+      <li><a href="blog_1.html">Blog</a>
+        <ul>
+          <li><a href="blog_1.html">Blog 1</a>
+            <ul>
+              <li><a href="blog_1.html">Right sidebar</a></li>
+              <li><a href="blog_1_l_sidebar.html">Left sidebar</a></li>
+              <li><a href="blog_1_full_width.html">Full Width</a></li>
+            </ul>
+          </li>
+          <li><a href="blog_2.html">Blog 2</a>
+            <ul>
+              <li><a href="blog_2.html">Right sidebar</a></li>
+              <li><a href="blog_2_l_sidebar.html">Left sidebar</a></li>
+              <li><a href="blog_2_full_width.html">Full Width</a></li>
+            </ul>
+          </li>
+          <li><a href="single_post.html">Post Single</a>
+            <ul>
+              <li><a href="single_post.html">Right sidebar</a></li>
+              <li><a href="single_post_l_sidebar.html">Left sidebar</a></li>
+              <li><a href="single_post_full_width.html">Full Width</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="right_sidebar.html">Pages</a>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="contact_us.html">Contact Us</a></li>
+          <li><a href="ask_question.html">Ask Question</a></li>
+          <li><a href="right_sidebar.html">Right Sidebar</a></li>
+          <li><a href="left_sidebar.html">Left Sidebar</a></li>
+          <li><a href="full_width.html">Full Width</a></li>
+          <li><a href="404.html">404</a></li>
+        </ul> 
+      </li>
+      <li><a href="shortcodes.html">Shortcodes</a></li>
+      <li><a href="contact_us.html">Contact Us</a></li>
+      {% comment %} <li><a href="contact_us.html"><img style="    width: 40px; height: 40px;" src="{% static 'images/patterns/bg13.png' %}"></img></a></li> {% endcomment %}
+      
+      {% if user.is_authenticated %}
+      
+        <li><a href="{% url "logout" %}">Logout</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</section><!-- End container -->
+</header>
+<div class="breadcrumbs" style="padding-top: 86px">
+  <section class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Register</h1>
+      </div>
+      <div class="col-md-12">
+        <div class="crumbs">
+          <a href="#">Home</a>
+          <span class="crumbs-span">/</span>
+          <a href="#">Pages</a>
+          <span class="crumbs-span">/</span>
+          <span class="current">Register</span>
+        </div>
+      </div>
+    </div>
+    <!-- End row -->
+  </section>
+  <!-- End container -->
+</div>
+<!-- End breadcrumbs -->
+
+<section class="container main-content">
+  <div class="login">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="page-content">
+          <h2>Register</h2>
+          <div class="form-style form-style-3">
+            <form action="" method="POST">
+              {% csrf_token %} {{form|crispy}}
+              <div class="form-inputs clearfix"></div>
+              <p class="form-submit login-submit">
+                <input
+                  type="submit"
+                  value="Log in"
+                  class="button color small login-submit submit"
+                />
+              </p>
+            </form>
+          </div>
+        </div>
+        <!-- End page-content -->
+      </div>
+      <!-- End col-md-6 -->
+      <div class="col-md-6">
+        <div class="page-content">
+          <h2>Register Now</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+            adipiscing gravdio, sit amet suscipit risus ultrices eu. Fusce
+            viverra neque at purus laoreet consequa. Vivamus vulputate posuere
+            nisl quis consequat.
+          </p>
+          <a class="button small color signup">Create an account</a>
+        </div>
+        <!-- End page-content -->
+      </div>
+      <!-- End col-md-6 -->
+    </div>
+    <!-- End row -->
+  </div>
+  <!-- End login -->
+</section>
+<!-- End container -->
+
+{% endblock content %}
