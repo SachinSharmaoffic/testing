@@ -1,0 +1,710 @@
+{% extends "base.html" %} {% block content %} {% load humanize %}
+	
+<header id="header" class="fixed-header
+" style="
+position: fixed;
+top: 50px;
+width: 100%;
+background-color: #2f3239; /* Set the background color as needed */
+z-index: 1000; /* Ensure the header is above other elements */
+ /* Add smooth transition effect */
+">
+<section class="container clearfix">
+  <div class="logo"><a href="{% url "base:home"%}"><img alt="" src="/static/images/logo2.png"></a></div>
+  <nav class="navigation">
+    <ul>
+      <li><a href="{% url "base:home"%}">Home</a>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index_2.html">Home 2</a></li>
+          <li><a href="index_boxed_1.html">Home Boxed 1</a></li>
+          <li><a href="index_boxed_2.html">Home Boxed 2</a></li>
+          <li><a href="index_no_box.html">Home No Box</a></li>
+        </ul>
+      </li>
+      {% if user.is_authenticated %}
+
+        <li class="ask_question "><a href="{% url 'base:question_create' %}">Ask Question</a></li>
+      {% else %}
+        <li class="ask_question"><a href="{% url 'login' %}">Ask Question</a></li>
+      
+      {% endif %}
+      
+      <li class="current_page_item"><a href="cat_question.html">Questions</a>
+        <ul>
+          <li><a href="cat_question.html">Questions Category</a></li>
+          <li><a href="single_question.html">Question Single</a></li>
+          
+        </ul>
+      </li>
+      <li><a href="user_profile.html">User</a>
+        <ul>
+          <li><a href="user_profile.html">User Profile</a></li>
+          <li><a href="user_questions.html">User Questions</a></li>
+          <li><a href="user_answers.html">User Answers</a></li>
+          <li><a href="user_favorite_questions.html">User Favorite Questions</a></li>
+          <li><a href="user_points.html">User Points</a></li>
+          <li><a href="edit_profile.html">Edit Profile</a></li>
+        </ul>
+      </li>
+      <li><a href="blog_1.html">Blog</a>
+        <ul>
+          <li><a href="blog_1.html">Blog 1</a>
+            <ul>
+              <li><a href="blog_1.html">Right sidebar</a></li>
+              <li><a href="blog_1_l_sidebar.html">Left sidebar</a></li>
+              <li><a href="blog_1_full_width.html">Full Width</a></li>
+            </ul>
+          </li>
+          <li><a href="blog_2.html">Blog 2</a>
+            <ul>
+              <li><a href="blog_2.html">Right sidebar</a></li>
+              <li><a href="blog_2_l_sidebar.html">Left sidebar</a></li>
+              <li><a href="blog_2_full_width.html">Full Width</a></li>
+            </ul>
+          </li>
+          <li><a href="single_post.html">Post Single</a>
+            <ul>
+              <li><a href="single_post.html">Right sidebar</a></li>
+              <li><a href="single_post_l_sidebar.html">Left sidebar</a></li>
+              <li><a href="single_post_full_width.html">Full Width</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="right_sidebar.html">Pages</a>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="contact_us.html">Contact Us</a></li>
+          <li><a href="ask_question.html">Ask Question</a></li>
+          <li><a href="right_sidebar.html">Right Sidebar</a></li>
+          <li><a href="left_sidebar.html">Left Sidebar</a></li>
+          <li><a href="full_width.html">Full Width</a></li>
+          <li><a href="404.html">404</a></li>
+        </ul> 
+      </li>
+      <li><a href="shortcodes.html">Shortcodes</a></li>
+      <li><a href="contact_us.html">Contact Us</a></li>
+      {% comment %} <li><a href="contact_us.html"><img style="    width: 40px; height: 40px;" src="{% static 'images/patterns/bg13.png' %}"></img></a></li> {% endcomment %}
+      
+      {% if user.is_authenticated %}
+      
+        <li><a href="{% url "logout" %}">Logout</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</section><!-- End container -->
+</header>
+
+
+<div class="breadcrumbs" style="padding-top: 86px">
+  <section class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>This is my first Question</h1>
+      </div>
+      <div class="col-md-12">
+        <div class="crumbs">
+          <a href="#">Home</a>
+          <span class="crumbs-span">/</span>
+          <a href="#">Questions</a>
+          <span class="crumbs-span">/</span>
+          <span class="current">This is my first Question</span>
+        </div>
+      </div>
+    </div>
+    <!-- End row -->
+  </section>
+  <!-- End container -->
+</div>
+<!-- End breadcrumbs -->
+
+<section class="container main-content">
+  <div class="row">
+    <div class="col-md-9">
+      <article class="question single-question question-type-normal">
+        <h2>
+          <a><span class="dropcap">Q. </span>{{ question.title }}</a>
+        </h2>
+        {% if user.is_authenticated and user == question.user %}
+            
+        <a class="question-report" href="{% url "base:question_delete" question.slug %}">Delete</a>
+        {% else %}
+        <a class="question-report" href="#">Report</a>
+
+        {% endif %}
+        <div class="question-type-main">
+          
+          <i class="icon-question-sign"></i>Question
+        </div>
+        <div class="question-inner">
+          <div class="clearfix"></div>
+          <div class="question-desc">
+            <p>{{question.content|safe}}</p>
+            
+            {% if user.is_authenticated and user == question.user %}
+            <a
+              href="{% url 'base:question_update' question.slug %}"
+              class="color button small poll_results"
+              style="/* margin: 15px; */ float: right"
+              >Edit</a
+            >
+            <a
+              href="#" id="answer-button"
+              class="color button small poll_results"
+              style="/* margin: 15px; */ float: right"
+              >Answer</a
+            >
+            {% else %}
+            <a
+              href="#" id="answer-button"
+              class="color button small poll_results"
+              style="/* margin: 15px; */ float: right"
+              >Answer</a
+            >
+            {% endif %}
+          </div>
+          <div class="question-details">
+            <span class="question-answered question-answered-done"
+              ><i class="icon-ok"></i>solved</span
+            >
+            <span class="question-favorite"><i class="icon-star"></i>5</span>
+          </div>
+          <span class="question-category">
+            <a href="#"><i class="icon-folder-close"></i>wordpress</a>
+          </span>
+          <span class="question-date"
+            ><i class="icon-time"></i
+            >{{question.date_created|naturaltime}}</span
+          >
+          <span class="question-comment"
+            ><a href="#"><i class="icon-comment"></i>5 Answer</a></span
+          >
+          <span class="question-view"><i class="icon-user"></i>70 views</span>
+          <span class="single-question-vote-result">{{ difference }}</span>
+          <ul class="single-question-vote">
+            <li>
+              <a href="{% url 'base:downvote_question' question.slug %}" class="single-question-vote-down" title="Dislike"
+                ><i class="icon-thumbs-down"></i
+              ></a>
+            </li>
+            <li>
+              <a href="{% url 'base:upvote_question' question.slug %}" class="single-question-vote-up" title="Like"
+                ><i class="icon-thumbs-up"></i
+              ></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+      </article>
+
+      <div class="share-tags page-content">
+        <div class="question-tags">
+          <i class="icon-tags"></i> <a href="#">wordpress</a>,
+          <a href="#">question</a>, <a href="#">developer</a>
+        </div>
+        <div class="share-inside-warp">
+          <ul>
+            <li>
+              <a href="#" original-title="Facebook">
+                <span class="icon_i">
+                  <span
+                    class="icon_square"
+                    icon_size="20"
+                    span_bg="#3b5997"
+                    span_hover="#666"
+                  >
+                    <i i_color="#FFF" class="social_icon-facebook"></i>
+                  </span>
+                </span>
+              </a>
+              <a href="#" target="_blank">Facebook</a>
+            </li>
+            <li>
+              <a href="#" target="_blank">
+                <span class="icon_i">
+                  <span
+                    class="icon_square"
+                    icon_size="20"
+                    span_bg="#00baf0"
+                    span_hover="#666"
+                  >
+                    <i i_color="#FFF" class="social_icon-twitter"></i>
+                  </span>
+                </span>
+              </a>
+              <a target="_blank" href="#">Twitter</a>
+            </li>
+            <li>
+              <a href="#" target="_blank">
+                <span class="icon_i">
+                  <span
+                    class="icon_square"
+                    icon_size="20"
+                    span_bg="#ca2c24"
+                    span_hover="#666"
+                  >
+                    <i i_color="#FFF" class="social_icon-gplus"></i>
+                  </span>
+                </span>
+              </a>
+              <a href="#" target="_blank">Google plus</a>
+            </li>
+            <li>
+              <a href="#" target="_blank">
+                <span class="icon_i">
+                  <span
+                    class="icon_square"
+                    icon_size="20"
+                    span_bg="#e64281"
+                    span_hover="#666"
+                  >
+                    <i i_color="#FFF" class="social_icon-dribbble"></i>
+                  </span>
+                </span>
+              </a>
+              <a href="#" target="_blank">Dribbble</a>
+            </li>
+            <li>
+              <a target="_blank" href="#">
+                <span class="icon_i">
+                  <span
+                    class="icon_square"
+                    icon_size="20"
+                    span_bg="#c7151a"
+                    span_hover="#666"
+                  >
+                    <i i_color="#FFF" class="icon-pinterest"></i>
+                  </span>
+                </span>
+              </a>
+              <a href="#" target="_blank">Pinterest</a>
+            </li>
+          </ul>
+          <span class="share-inside-f-arrow"></span>
+          <span class="share-inside-l-arrow"></span>
+        </div>
+        <!-- End share-inside-warp -->
+       
+       
+        <div class="share-inside"><i class="icon-share-alt"></i>Share</div>
+        
+        
+        
+        
+        
+        <div class="clearfix"></div>
+      </div>
+      <!-- End share-tags -->
+
+      <div class="about-author clearfix">
+        <div class="author-image">
+          <a href="#" original-title="admin" class="tooltip-n"
+            ><img alt="" src="{{ question.user.profile.image.url }}"
+          /></a>
+        </div>
+        <div class="author-bio">
+          <h4>About the Author</h4>
+          <h5>{{question.user}}</h5>
+          {{ question.user.profile.bio }}
+        </div>
+      </div>
+      <!-- End about-author -->
+
+      <div id="related-posts">
+        <h2>Related questions</h2>
+        <ul class="related-posts">
+          <li class="related-item">
+            <h3>
+              <a href="#"
+                ><i class="icon-double-angle-right"></i>This Is My Second Poll
+                Question</a
+              >
+            </h3>
+          </li>
+          <li class="related-item">
+            <h3>
+              <a href="#"
+                ><i class="icon-double-angle-right"></i>This is my third
+                Question</a
+              >
+            </h3>
+          </li>
+          <li class="related-item">
+            <h3>
+              <a href="#"
+                ><i class="icon-double-angle-right"></i>This is my fourth
+                Question</a
+              >
+            </h3>
+          </li>
+          <li class="related-item">
+            <h3>
+              <a href="#"
+                ><i class="icon-double-angle-right"></i>This is my fifth
+                Question</a
+              >
+            </h3>
+          </li>
+        </ul>
+      </div>
+      <!-- End related-posts -->
+
+      <div id="commentlist" class="page-content">
+        <div class="boxedtitle page-title">
+          <h2>Answers ( <span class="color">{{ question.comment_count }}</span> )</h2>
+        </div>
+        <ol class="commentlist clearfix">
+          {% if not question.comment.all %}
+                    
+          <li class="comment">
+            <div class="comment-body comment-body-answered clearfix">
+
+              <div class="comment-text">
+                <div class="author clearfix">
+                  <div class="comment-author"><a href="#">NO Answer's Yet Answer Now......</a></div>
+
+              </div>
+            </div>
+    
+            
+            <!-- End children -->
+          </li>
+          
+          {% else %}
+
+          {% for comment in question.comment.all %}
+          
+
+          <li class="comment">
+            <div class="comment-body comment-body-answered clearfix">
+              <div class="avatar">
+                <img alt="" src="{{ comment.user.profile.image.url }}" />
+              </div>
+            
+              <div class="comment-text">
+                <div class="author clearfix">
+                  <div class="comment-author"><a href="#">{{comment.user}}</a></div>
+                  <div class="comment-meta"> 
+                    <div class="date">
+                      <i class="icon-time"></i>{{comment.date_created|naturaltime}}
+                    </div>
+                  </div>
+                  <a class="comment-reply" href="#"
+                    ><i class="icon-reply"></i>Reply</a
+                  >
+                </div>
+                <div class="text">
+                  <p>
+                   
+                  {{comment.content}}
+                  </p>
+                </div>
+
+
+                
+                {% comment %} <div class="question-answered question-answered-done">
+                  <i class="icon-ok"></i>Best Answer
+                </div> {% endcomment %}
+              </div>
+            </div>
+    
+            <!-- End children -->
+          </li>
+
+          {% endfor %}
+        {% endif %}
+        </ol>
+        <!-- End commentlist -->
+      </div>
+      <!-- End page-content -->
+
+  
+
+      <div id="respond" class="comment-respond page-content clearfix">
+        <div class="boxedtitle page-title"><h2>Post Your Answer</h2></div>
+        <form method="post" id="commentform" class="comment-form">
+          {% csrf_token %}
+          
+          <!-- Your custom form fields here -->
+          {% comment %} <div id="respond-inputs" class="clearfix">
+            <p>
+              <label class="required" for="comment_name">Name<span>*</span></label>
+              <input
+                name="author"
+                type="text"
+                value=""
+                id="comment_name"
+                aria-required="true"
+                placeholder="Your Name"
+              />
+            </p>
+            <p>
+              <label class="required" for="comment_email">E-Mail<span>*</span></label>
+              <input
+                name="email"
+                type="text"
+                value=""
+                id="comment_email"
+                aria-required="true"
+                placeholder="Your Email"
+              />
+            </p>
+            <p class="last">
+              <label class="required" for="comment_url">Website</label>
+              <input
+                name="url"
+                type="text"
+                value=""
+                id="comment_url"
+                placeholder="Your Website (Optional)"
+              />
+            </p>
+          </div> {% endcomment %}
+          <div id="respond-textarea">
+            <p>
+              <label for="{{ comment_form.comment.id_for_label }}">Answer<span>*</span></label>
+              <textarea
+                id="{{ comment_form.comment.id_for_label }}"
+                name="content"  
+                aria-required="true"
+                cols="58"
+                rows="8"
+                placeholder="Your Answer"
+              ></textarea>
+            </p>
+          </div>
+          
+          
+          <!-- Submit button -->
+          <p class="form-submit">
+            <input
+              name="submit"
+              type="submit"
+              id="submit"
+              value="Post your answer"
+              class="button small color"
+            />
+          </p>
+        </form>
+      </div>
+      
+      
+
+      <div class="post-next-prev clearfix">
+        <p class="prev-post">
+          <a href="#"
+            ><i class="icon-double-angle-left"></i>&nbsp;Prev question</a
+          >
+        </p>
+        <p class="next-post">
+          <a href="#"
+            >Next question&nbsp;<i class="icon-double-angle-right"></i
+          ></a>
+        </p>
+      </div>
+      <!-- End post-next-prev -->
+    </div>
+    <!-- End main -->
+    <aside class="col-md-3 sidebar">
+      <div class="widget widget_stats">
+        <h3 class="widget_title">Stats</h3>
+        <div class="ul_list ul_list-icon-ok">
+          <ul>
+            <li>
+              <i class="icon-question-sign"></i>Questions ( <span>20</span> )
+            </li>
+            <li><i class="icon-comment"></i>Answers ( <span>50</span> )</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="widget widget_social">
+        <h3 class="widget_title">Find Us</h3>
+        <ul>
+          <li class="rss-subscribers">
+            <a href="#" target="_blank">
+              <strong>
+                <i class="icon-rss"></i>
+                <span>Subscribe</span><br />
+                <small>To RSS Feed</small>
+              </strong>
+            </a>
+          </li>
+          <li class="facebook-fans">
+            <a href="#" target="_blank">
+              <strong>
+                <i class="social_icon-facebook"></i>
+                <span>5,000</span><br />
+                <small>People like it</small>
+              </strong>
+            </a>
+          </li>
+          <li class="twitter-followers">
+            <a href="#" target="_blank">
+              <strong>
+                <i class="social_icon-twitter"></i>
+                <span>3,000</span><br />
+                <small>Followers</small>
+              </strong>
+            </a>
+          </li>
+          <li class="youtube-subs">
+            <a href="#" target="_blank">
+              <strong>
+                <i class="icon-play"></i>
+                <span>1,000</span><br />
+                <small>Subscribers</small>
+              </strong>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+
+
+      <div class="widget widget_login">
+        <h3 class="widget_title">Login</h3>
+        <div class="form-style form-style-2">
+          <form>
+            <div class="form-inputs clearfix">
+              <p class="login-text">
+                <input
+                  type="text"
+                  value="Username"
+                  onfocus="if (this.value == 'Username') {this.value = '';}"
+                  onblur="if (this.value == '') {this.value = 'Username';}"
+                />
+                <i class="icon-user"></i>
+              </p>
+              <p class="login-password">
+                <input
+                  type="password"
+                  value="Password"
+                  onfocus="if (this.value == 'Password') {this.value = '';}"
+                  onblur="if (this.value == '') {this.value = 'Password';}"
+                />
+                <i class="icon-lock"></i>
+                <a href="#">Forget</a>
+              </p>
+            </div>
+            <p class="form-submit login-submit">
+              <input
+                type="submit"
+                value="Log in"
+                class="button color small login-submit submit"
+              />
+            </p>
+            <div class="rememberme">
+              <label
+                ><input type="checkbox" checked="checked" /> Remember Me</label
+              >
+            </div>
+          </form>
+          <ul class="login-links login-links-r">
+            <li><a href="#">Register</a></li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+
+      <div class="widget widget_highest_points">
+        <h3 class="widget_title">Highest points</h3>
+        <ul>
+          <li>
+            <div class="author-img">
+              <a href="#"
+                ><img
+                  width="60"
+                  height="60"
+                  src="../ask-me/images/demo/admin.jpg"
+                  alt=""
+              /></a>
+            </div>
+            <h6><a href="#">admin</a></h6>
+            <span class="comment">12 Points</span>
+          </li>
+          <li>
+            <div class="author-img">
+              <a href="#"
+                ><img
+                  width="60"
+                  height="60"
+                  src="../ask-me/images/demo/avatar.png"
+                  alt=""
+              /></a>
+            </div>
+            <h6><a href="#">vbegy</a></h6>
+            <span class="comment">10 Points</span>
+          </li>
+          <li>
+            <div class="author-img">
+              <a href="#"
+                ><img
+                  width="60"
+                  height="60"
+                  src="../ask-me/images/demo/avatar.png"
+                  alt=""
+              /></a>
+            </div>
+            <h6><a href="#">ahmed</a></h6>
+            <span class="comment">5 Points</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="widget widget_tag_cloud">
+        <h3 class="widget_title">Tags</h3>
+        <a href="#">projects</a>
+        <a href="#">Portfolio</a>
+        <a href="#">Wordpress</a>
+        <a href="#">Html</a>
+        <a href="#">Css</a>
+        <a href="#">jQuery</a>
+        <a href="#">2code</a>
+        <a href="#">vbegy</a>
+      </div>
+
+      <div class="widget">
+        <h3 class="widget_title">Recent Questions</h3>
+        <ul class="related-posts">
+          <li class="related-item">
+            <h3><a href="#">This is my first Question</a></h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <div class="clear"></div>
+            <span>Feb 22, 2014</span>
+          </li>
+          <li class="related-item">
+            <h3><a href="#">This Is My Second Poll Question</a></h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <div class="clear"></div>
+            <span>Feb 22, 2014</span>
+          </li>
+        </ul>
+      </div>
+    </aside>
+    <!-- End sidebar -->
+  </div>
+  <!-- End row -->
+</section>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      var answerButton = document.getElementById("answer-button");
+      var form = document.getElementById("respond");
+  
+      answerButton.addEventListener("click", function(e) {
+          e.preventDefault();
+  
+          // Calculate the offset of the form from the top of the page
+          var formOffset = form.offsetTop;
+  
+          // Smooth scroll to the form
+          window.scrollTo({
+              top: formOffset,
+              behavior: "smooth"
+          });
+      });
+  });
+  </script>
+  
+{% endblock content %}
